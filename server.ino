@@ -1,15 +1,25 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
+#include <DHT.h>
 
-const char* ssid = "your_SSID";       // Replace with your Wi-Fi SSID
-const char* password = "your_PASSWORD"; // Replace with your Wi-Fi password
+// Replace with your network credentials
+const char* ssid = "<login>";
+const char* password = "<pw>";
 
-ESP8266WebServer server(80);  // Create a web server on port 80
-const int ledPin = D1;        // LED connected to digital pin D1
+// Define the DHT11 sensor and the pin it's connected to
+#define DHTPIN D7
+#define DHTTYPE DHT11
+DHT dht(DHTPIN, DHTTYPE);
+
+// Create an instance of the server on port 80
+ESP8266WebServer server(80);
 
 void setup() {
+  // Start the Serial Monitor
   Serial.begin(115200);
-  pinMode(ledPin, OUTPUT);
+
+  // Start the DHT sensor
+  dht.begin();
 
   // Connect to Wi-Fi
   WiFi.begin(ssid, password);
@@ -18,17 +28,26 @@ void setup() {
     Serial.println("Connecting to WiFi...");
   }
   Serial.println("Connected to WiFi");
-  Serial.println(WiFi.localIP());  // Print the IP address assigned to the ESP8266
+  Serial.println(WiFi.localIP());
 
-  // Define routes for turning the LED on and off
-  server.on("/on", []() {
-    digitalWrite(ledPin, HIGH);    // Turn LED on
-    server.send(200, "text/plain", "LED is ON");
-  });
+  // Define the route for serving sensor data
+  server.on("/data", []() {
+    float humidity = dht.readHumidity();
+    float temperature = dht.readTemperature();
+    
+    // Check if any reads failed and exit early
+    if (isnan(humidity) || isnan(temperature)) {
+      server.send(500, "text/plain", "Failed to read from DHT sensor");
+      return;
+    }
 
-  server.on("/off", []() {
-    digitalWrite(ledPin, LOW);    // Turn LED off
-    server.send(200, "text/plain", "LED is OFF");
+    // Create a JSON response with temperature and humidity data
+    String json = "{";
+    json += "\"temperature\": " + String(temperature) + ",";
+    json += "\"humidity\": " + String(humidity);
+    json += "}";
+
+    server.send(200, "application/json", json);
   });
 
   // Start the server
@@ -37,5 +56,6 @@ void setup() {
 }
 
 void loop() {
-  server.handleClient();  // Handle incoming client requests
+  // Handle incoming client requests
+  server.handleClient();
 }

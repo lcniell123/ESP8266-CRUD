@@ -3,29 +3,19 @@ const axios = require("axios");
 const app = express();
 
 // Replace with the IP address of your ESP8266
-const ESP8266_IP = "10.0.0.210";
+const ESP8266_IP = "<ip-address>";
 
 app.use(express.static("public"));
 
-// Route to turn LED on
-app.get("/led/on", async (req, res) => {
+// Route to get sensor data
+app.get("/sensor/data", async (req, res) => {
   try {
-    const response = await axios.get(`${ESP8266_IP}/on`);
-    console.log("ESP8266 response:", response.data);
-    res.send("LED turned on!");
+    const response = await axios.get(`${ESP8266_IP}/data`);
+    console.log("Sensor data:", response.data);
+    res.json(response.data); // Send the sensor data as JSON to the client
   } catch (error) {
-    console.error("Error turning on LED:", error.message);
-    res.status(500).send("Failed to turn on LED.");
-  }
-});
-
-// Route to turn LED off
-app.get("/led/off", async (req, res) => {
-  try {
-    const response = await axios.get(`${ESP8266_IP}/off`);
-    res.send("LED turned off!");
-  } catch (error) {
-    res.status(500).send("Failed to turn off LED.");
+    console.error("Error fetching sensor data:", error.message);
+    res.status(500).send("Failed to fetch sensor data.");
   }
 });
 
