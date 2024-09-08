@@ -55,19 +55,6 @@
         margin-right: 10px;
       }
 
-      /* Temperature and humidity-based coloring */
-      .cold-low-humidity {
-        color: #3498db; /* Blue */
-      }
-
-      .warm-moderate-humidity {
-        color: #f39c12; /* Orange */
-      }
-
-      .hot-high-humidity {
-        color: #e74c3c; /* Red */
-      }
-
       button {
         background-color: #0056b3;
         color: #fff;
@@ -83,21 +70,11 @@
       button:hover {
         background-color: #003d7a;
       }
-
-      .loading {
-        color: #999;
-        font-style: italic;
-      }
-
-      .error {
-        color: #e74c3c;
-        font-weight: bold;
-      }
     </style>
   </head>
   <body>
     <div id="container">
-      <h1>Temperature & Humidity</h1>
+      <h1>Temperature, Humidity & Soil Moisture</h1>
       <div id="sensor-data">
         <p>
           <i class="fas fa-thermometer-half icon"></i> Temperature:
@@ -110,6 +87,10 @@
         <p>
           <i class="fas fa-tint icon"></i> Humidity:
           <span id="humidity" class="data">Loading...</span> %
+        </p>
+        <p>
+          <i class="fas fa-seedling icon"></i> Soil Moisture:
+          <span id="soil-moisture" class="data">Loading...</span>
         </p>
       </div>
       <button onclick="fetchSensorData()">Refresh Data</button>
@@ -124,46 +105,27 @@
           const tempCElement = document.getElementById("temperature-c");
           const tempFElement = document.getElementById("temperature-f");
           const humidityElement = document.getElementById("humidity");
+          const soilMoistureElement = document.getElementById("soil-moisture");
 
           const temperatureC = data.temperature;
           const temperatureF = (temperatureC * 9) / 5 + 32;
           const humidity = data.humidity;
+          const soilMoisture = data.soil_moisture;
 
           tempCElement.textContent = temperatureC.toFixed(2);
           tempFElement.textContent = temperatureF.toFixed(2);
           humidityElement.textContent = humidity;
-
-          // Apply color based on temperature and humidity
-          if (temperatureC < 15 && humidity < 50) {
-            tempCElement.className = "data cold-low-humidity";
-            tempFElement.className = "data cold-low-humidity";
-            humidityElement.className = "data cold-low-humidity";
-          } else if (
-            temperatureC >= 15 &&
-            temperatureC < 25 &&
-            humidity >= 50 &&
-            humidity < 70
-          ) {
-            tempCElement.className = "data warm-moderate-humidity";
-            tempFElement.className = "data warm-moderate-humidity";
-            humidityElement.className = "data warm-moderate-humidity";
-          } else if (temperatureC >= 25 && humidity >= 70) {
-            tempCElement.className = "data hot-high-humidity";
-            tempFElement.className = "data hot-high-humidity";
-            humidityElement.className = "data hot-high-humidity";
-          } else {
-            tempCElement.className = "data";
-            tempFElement.className = "data";
-            humidityElement.className = "data";
-          }
+          soilMoistureElement.textContent = soilMoisture;
         } catch (error) {
           console.error("Error fetching sensor data:", error);
           document.getElementById("temperature-c").textContent = "Error";
           document.getElementById("temperature-f").textContent = "Error";
           document.getElementById("humidity").textContent = "Error";
+          document.getElementById("soil-moisture").textContent = "Error";
         }
       }
 
+      // Fetch data initially
       fetchSensorData();
     </script>
   </body>
