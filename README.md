@@ -83,5 +83,3 @@ This project uses an **ESP8266** with a **DHT11 sensor** to measure **temperatur
 2. **ESP8266 reads data** and serves it at `/data`.
 3. **A computer running Node.js** fetches the data.
 4. **A web page** displays the sensor data in real time.
-
-### **Connection Flow**

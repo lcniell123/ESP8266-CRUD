@@ -3,7 +3,7 @@ const axios = require("axios");
 const app = express();
 
 // ✅ Replace with your ESP8266's IP address
-const ESP8266_IP = "http://10.0.0.203"; // Change this to your ESP8266 IP
+const ESP8266_IP = "http://<ip>"; // Change this to your ESP8266 IP
 
 app.use(express.static("public"));
 
