@@ -1,6 +1,6 @@
 # garden-project
 
-Get Garden Sensor data
+Get ESP8266 Sensor data
 
 # ESP8266 Temperature & Humidity Monitor
 
