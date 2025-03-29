@@ -1,6 +1,4 @@
 
-Get ESP8266 Sensor data
-
 # ESP8266 Temperature & Humidity Monitor
 
 ## About
