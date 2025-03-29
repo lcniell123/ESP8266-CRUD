@@ -1,4 +1,3 @@
-# garden-project
 
 Get ESP8266 Sensor data
 
